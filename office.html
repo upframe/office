@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Who's in the office?</title>
+    <link rel="stylesheet" type="text/css" href="office.css">
+    <script src="static/office.js"></script>
+  </head>
+
+  <body>
+    {{ range $key, $value :=  . }}
+      <div>
+        {{ $key }}<input type="checkbox" {{ if $value }}checked{{ end }}>
+      </div>
+    {{ end }}
+  </body>
+</html>
