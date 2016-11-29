@@ -44,6 +44,11 @@ func index(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if r.URL.Path == "/auth" {
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		return
+	}
+
 	if r.Method != "GET" {
 		http.Error(w, "Method Not Allowed", 405)
 		return
