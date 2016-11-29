@@ -1,6 +1,10 @@
+* {
+    box-sizing: border-box;
+}
+
 body {
     max-width: 27em;
-    width: 100%;
+    width: 90%;
     margin: 0 auto;
     color: #212121;
 }
