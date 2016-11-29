@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -11,16 +10,18 @@ import (
 	"os"
 )
 
-var team = map[string]bool{}
+var (
+	team map[string]bool
+	tpl  *template.Template
+)
 
 func main() {
 	file, err := ioutil.ReadFile("team.json")
 	if os.IsNotExist(err) {
-		err := ioutil.WriteFile("team.json", []byte("{}"), 0666)
-		if err != nil {
-			log.Fatal(err)
-		}
-	} else if err != nil {
+		err = ioutil.WriteFile("team.json", []byte("{}"), 0666)
+	}
+
+	if err != nil {
 		log.Fatal(err)
 	}
 
@@ -29,72 +30,82 @@ func main() {
 		log.Fatal(err)
 	}
 
-	http.Handle("/static/", http.FileServer(http.Dir("./")))
-	http.HandleFunc("/switch", Switch)
-	http.HandleFunc("/", Index)
+	http.HandleFunc("/api", api)
+	http.HandleFunc("/", index)
 	if err := http.ListenAndServe(":9696", nil); err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
 }
 
-// Index ...
-func Index(w http.ResponseWriter, r *http.Request) {
-	page, err := ioutil.ReadFile("office.html")
-	if err != nil {
-		w.WriteHeader(500)
+func index(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/" {
+		http.Error(w, "Not Found", 404)
 		return
 	}
 
-	tpl, err := template.New("office").Parse(string(page))
-	if err != nil {
-		w.WriteHeader(500)
+	if r.Method != "GET" {
+		http.Error(w, "Method Not Allowed", 405)
 		return
 	}
-	err = tpl.Execute(w, team)
-	if err != nil {
-		w.WriteHeader(500)
+
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+
+	// TODO: Make the TPL variable global
+	tpl = template.Must(template.ParseFiles("office.html"))
+	tpl = template.Must(tpl.ParseFiles("office.js"))
+	tpl = template.Must(tpl.ParseFiles("office.css"))
+
+	if err := tpl.Execute(w, team); err != nil {
+		http.Error(w, "Internal Server Error", 500)
 	}
 }
 
-// Switch ...
-func Switch(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		w.WriteHeader(400)
+func api(w http.ResponseWriter, r *http.Request) {
+	// If it's Get, return the JSON with the statuses
+	if r.Method == http.MethodGet {
+		data, err := json.Marshal(team)
+		if err != nil {
+			http.Error(w, "Internal Server Error", 500)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.Write(data)
 		return
 	}
 
-	o := map[string]bool{}
+	// If it's different from POST, return not allowed
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method Not Allowed", 405)
+		return
+	}
+
+	object := map[string]bool{}
 	rawBuffer := new(bytes.Buffer)
 	rawBuffer.ReadFrom(r.Body)
 
-	fmt.Println(rawBuffer)
-
-	err := json.Unmarshal(rawBuffer.Bytes(), &o)
+	err := json.Unmarshal(rawBuffer.Bytes(), &object)
 	if err != nil {
-		w.WriteHeader(500)
+		http.Error(w, "Internal Server Error", 500)
 		return
 	}
 
-	for key, val := range o {
+	for key, val := range object {
 		team[key] = val
 	}
 
-	if Save() != nil {
-		w.WriteHeader(500)
-		return
+	if save() != nil {
+		http.Error(w, "Internal Server Error", 500)
 	}
+
+	w.WriteHeader(http.StatusOK)
 }
 
-// Save ...
-func Save() (err error) {
+func save() error {
 	data, err := json.Marshal(team)
 	if err != nil {
-		return
+		return err
 	}
 
-	err = ioutil.WriteFile("team.json", data, 0666)
-	if err != nil {
-		return
-	}
-	return
+	return ioutil.WriteFile("team.json", data, 0666)
 }
