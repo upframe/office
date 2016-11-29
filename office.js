@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function() {
       json[input.dataset.user] = input.checked;
 
       let request = new XMLHttpRequest();
-      request.open("POST", "/switch");
+      request.open("POST", "/api");
       request.send(JSON.stringify(json));
       request.onreadystatechange = function() {
         if(request.readyState == 4) {
