@@ -14,8 +14,8 @@
         {{ range $key, $value :=  . }}
         <div>
             <input id="{{ $key }}" type="checkbox" {{ if $value }}checked{{ end }} onchange="update(event)">
+            <label for="{{ $key }}" class="circle"></label>
             <label for="{{ $key }}">@{{ $key }}</label>
-
         </div>
         {{ end }}
     </div>

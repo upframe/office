@@ -1,0 +1,54 @@
+body {
+    max-width: 27em;
+    width: 100%;
+    margin: 0 auto;
+    color: #212121;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 1em;
+    font-size: 4em;
+    color: #E91E63;
+}
+
+input[type="text"] {
+    width: 100%;
+    font-size: 1.2em;
+    border: 0;
+    border-bottom: .1em solid grey;
+    color: #673AB7;
+    margin-top: 2em;
+    padding: .5em;
+    transition: .2s ease-in-out all;
+    text-align: center;
+}
+
+input[type="text"]:hover,
+input[type="text"]:focus {
+    border-bottom-color: #673AB7;
+    outline: 0;
+}
+
+#team {
+    font-size: 1.5em;
+    line-height: 1.5;
+}
+
+[type=checkbox] {
+    display: none;
+}
+
+label.circle {
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    vertical-align: middle;
+    border-radius: 50%;
+    transition: .2s ease-in-out all;
+    background: #ECEFF1;
+}
+
+input:checked + label.circle {
+    background: #CDDC39;
+}
