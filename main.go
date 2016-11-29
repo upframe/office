@@ -18,7 +18,8 @@ var (
 func main() {
 	file, err := ioutil.ReadFile("team.json")
 	if os.IsNotExist(err) {
-		err = ioutil.WriteFile("team.json", []byte("{}"), 0666)
+		file = []byte("{}")
+		err = ioutil.WriteFile("team.json", file, 0666)
 	}
 
 	if err != nil {

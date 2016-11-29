@@ -1,17 +1,25 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title>Who's there?</title>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
     <script>{{ template "office.js"}}</script>
     <style>{{ template "office.css" }}</style>
-  </head>
+</head>
 
-  <body>
-    {{ range $key, $value :=  . }}
-      <div>
-        {{ $key }}<input type="checkbox" {{ if $value }}checked{{ end }} data-user="{{ $key }}">
-      </div>
-    {{ end }}
-  </body>
+<body>
+    <h1>Who's there?</h1>
+
+    <div id="team">
+        {{ range $key, $value :=  . }}
+        <div>
+            <input id="{{ $key }}" type="checkbox" {{ if $value }}checked{{ end }} onchange="update(event)">
+            <label for="{{ $key }}">@{{ $key }}</label>
+
+        </div>
+        {{ end }}
+    </div>
+
+    <input type="text" placeholder="What's your nick?" onkeyup="update(event)">
+</body>
 </html>
