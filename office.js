@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     if (!el) {
                         team.insertAdjacentHTML('beforeend', `<div>
                             <input id="${person}" type="checkbox" onchange="update(event)">
+                            <label for="${person}" class="circle"></label>
                             <label for="${person}">@${person}</label>
                         </div>`);
                         el = document.getElementById(person);
