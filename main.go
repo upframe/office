@@ -81,6 +81,12 @@ func api(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	_, _, ok := r.BasicAuth()
+	if !ok {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
 	object := map[string]bool{}
 	rawBuffer := new(bytes.Buffer)
 	rawBuffer.ReadFrom(r.Body)
