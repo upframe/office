@@ -69,7 +69,7 @@ func Switch(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println(rawBuffer)
 
-	err := json.Unmarshal(rawBuffer.Bytes(), o)
+	err := json.Unmarshal(rawBuffer.Bytes(), &o)
 	if err != nil {
 		w.WriteHeader(500)
 		return
