@@ -9,7 +9,7 @@
   <body>
     {{ range $key, $value :=  . }}
       <div>
-        {{ $key }}<input type="checkbox" {{ if $value }}checked{{ end }}>
+        {{ $key }}<input type="checkbox" {{ if $value }}checked{{ end }} data-user="{{ $key }}">
       </div>
     {{ end }}
   </body>

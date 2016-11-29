@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -53,7 +54,6 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(500)
 	}
-
 }
 
 // Switch ...
@@ -66,6 +66,8 @@ func Switch(w http.ResponseWriter, r *http.Request) {
 	o := map[string]bool{}
 	rawBuffer := new(bytes.Buffer)
 	rawBuffer.ReadFrom(r.Body)
+
+	fmt.Println(rawBuffer)
 
 	err := json.Unmarshal(rawBuffer.Bytes(), o)
 	if err != nil {
@@ -91,5 +93,8 @@ func Save() (err error) {
 	}
 
 	err = ioutil.WriteFile("team.json", data, 0666)
+	if err != nil {
+		return
+	}
 	return
 }
