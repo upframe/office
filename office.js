@@ -58,6 +58,8 @@ function update(event) {
             if (request.status != 200) {
                 window.location.reload(true);
             }
+
+            if (event.target.type == "text") window.location.reload(true);
         }
     }
 }
