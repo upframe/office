@@ -16,6 +16,11 @@ var (
 )
 
 func main() {
+	// TODO: Make the TPL variable global
+	tpl = template.Must(template.ParseFiles("office.html"))
+	tpl = template.Must(tpl.ParseFiles("office.js"))
+	tpl = template.Must(tpl.ParseFiles("office.css"))
+
 	file, err := ioutil.ReadFile("team.json")
 	if os.IsNotExist(err) {
 		file = []byte("{}")
@@ -39,13 +44,13 @@ func main() {
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/" {
-		http.Error(w, "Not Found", 404)
+	if r.URL.Path == "/auth" {
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
 
-	if r.URL.Path == "/auth" {
-		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+	if r.URL.Path != "/" {
+		http.Error(w, "Not Found", 404)
 		return
 	}
 
@@ -55,11 +60,6 @@ func index(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-
-	// TODO: Make the TPL variable global
-	tpl = template.Must(template.ParseFiles("office.html"))
-	tpl = template.Must(tpl.ParseFiles("office.js"))
-	tpl = template.Must(tpl.ParseFiles("office.css"))
 
 	if err := tpl.Execute(w, team); err != nil {
 		http.Error(w, "Internal Server Error", 500)
