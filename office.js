@@ -26,7 +26,9 @@ document.addEventListener("DOMContentLoaded", function() {
                         el = document.getElementById(person);
                     }
 
-                    el.checked = obj[person];
+                    if (el.checked != obj[person]) {
+                        el.checked = obj[person];
+                    }
                 }
 
                 setTimeout(update, 1000);
