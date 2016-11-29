@@ -51,6 +51,7 @@ label.circle {
     border-radius: 50%;
     transition: .2s ease-in-out all;
     background: #ECEFF1;
+    cursor: pointer;
 }
 
 input:checked + label.circle {
