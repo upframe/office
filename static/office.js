@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
       let request = new XMLHttpRequest();
       request.open("POST", "/switch");
-      request.send();
+      request.send(json);
       request.onreadystatechange = function() {
         if(request.readyState == 4) {
           if(request.status == 500) {
