@@ -53,7 +53,7 @@ function update(event) {
     }
 
     let request = new XMLHttpRequest();
-    request.open("POST", "/api");
+    request.open("POST", "/api", true);
     request.send(body);
     request.onreadystatechange = function() {
         if (request.readyState == 4) {
@@ -64,4 +64,23 @@ function update(event) {
             if (event.target.type == "text") window.location.reload(true);
         }
     }
+}
+
+function letmefuckingin(event) {
+  event.preventDefault();
+
+  let pwd = prompt("Tell me about passwords"),
+    request = new XMLHttpRequest();
+  console.log(pwd); // just a debug
+  request.open("POST", "/auth", true);
+  request.send(pwd);
+  request.onreadystatechange = function() {
+    if (request.readyState == 4) {
+      if (request.status == 200) {
+        window.location.reload();
+      } else {
+        alert("Your password didn't convince me... :(");
+      }
+    }
+  }
 }

@@ -8,18 +8,20 @@
 </head>
 
 <body>
+  {{ $logged := .LoggedIn }}
     <h1>Who's there?</h1>
 
     <div id="team">
-        {{ range $key, $value :=  . }}
+        {{ range $key, $value :=  .Team }}
         <div>
-            <input id="{{ $key }}" type="checkbox" {{ if $value }}checked{{ end }} onchange="update(event)">
+            <input id="{{ $key }}" type="checkbox" {{ if $value }}checked{{ end }}{{ if $logged }}onchange="update(event)"{{ else }}disabled{{ end }}>
             <label for="{{ $key }}" class="circle"></label>
             <label for="{{ $key }}">@{{ $key }}</label>
         </div>
         {{ end }}
     </div>
 
-    <input type="text" placeholder="What's your nick?" onkeyup="update(event)">
+    {{ if .LoggedIn }}<input type="text" placeholder="What's your nick?" onkeyup="update(event)">{{ end }}
+    <p id="login" onclick="letmefuckingin(event)">Login ></p>
 </body>
 </html>
