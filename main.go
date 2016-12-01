@@ -5,6 +5,7 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -42,6 +43,7 @@ func main() {
 	}
 
 	http.HandleFunc("/auth", auth)
+	http.HandleFunc("/logout", logout)
 	http.HandleFunc("/api", api)
 	http.HandleFunc("/", index)
 	if err := http.ListenAndServe(":9696", nil); err != nil {
@@ -66,9 +68,21 @@ func index(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
+	cookie, err := r.Cookie("office-login")
+	if err != nil {
+		cookie = &http.Cookie{
+			Name:     "office-login",
+			Value:    "0",
+			Secure:   secure,
+			HttpOnly: true,
+		}
+	}
+
 	if err := tpl.Execute(w, map[string]interface{}{
-		"Team": team,
+		"Team":   team,
+		"Cookie": cookie,
 	}); err != nil {
+		fmt.Println(err)
 		http.Error(w, "Internal Server Error", 500)
 	}
 }
@@ -93,8 +107,18 @@ func api(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, password, ok := r.BasicAuth()
-	if !ok || password != pwd {
+	cookie, err := r.Cookie("office-login")
+	if err != nil {
+		http.Error(w, "Internal Server Error", 500)
+		return
+	}
+
+	h := md5.New()
+	h.Write([]byte(pwd))
+
+	if cookie.Value != hex.EncodeToString(h.Sum(nil)) {
+		fmt.Println("bug...")
+		cookie.MaxAge = -1
 		w.WriteHeader(401)
 		return
 	}
@@ -103,7 +127,7 @@ func api(w http.ResponseWriter, r *http.Request) {
 	rawBuffer := new(bytes.Buffer)
 	rawBuffer.ReadFrom(r.Body)
 
-	err := json.Unmarshal(rawBuffer.Bytes(), &object)
+	err = json.Unmarshal(rawBuffer.Bytes(), &object)
 	if err != nil {
 		w.WriteHeader(500)
 		return
@@ -130,7 +154,8 @@ func auth(w http.ResponseWriter, r *http.Request) {
 	rawBuffer := new(bytes.Buffer)
 	rawBuffer.ReadFrom(r.Body)
 
-	if string(rawBuffer.Bytes()) != pwd {
+	if (string(rawBuffer.Bytes())) != string(pwd) {
+
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
@@ -139,14 +164,33 @@ func auth(w http.ResponseWriter, r *http.Request) {
 	h.Write(rawBuffer.Bytes())
 
 	cookie := http.Cookie{
-		Name:     "login",
+		Name:     "office-login",
 		Value:    hex.EncodeToString(h.Sum(nil)),
 		Path:     "/", // omited MaxAge so it's default value is 0
 		Secure:   secure,
 		HttpOnly: true,
 	}
-
 	http.SetCookie(w, &cookie)
+
+	w.WriteHeader(200)
+}
+
+func logout(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		w.WriteHeader(405)
+		return
+	}
+
+	cookie, err := r.Cookie("office-login")
+	if err != nil || cookie != nil {
+		cookie = &http.Cookie{
+			Name:     "office-login",
+			Value:    "0",
+			Secure:   secure,
+			HttpOnly: true,
+		}
+		http.SetCookie(w, cookie)
+	}
 
 	w.WriteHeader(200)
 }

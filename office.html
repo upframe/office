@@ -8,20 +8,19 @@
 </head>
 
 <body>
-  {{ $logged := .LoggedIn }}
+  {{ $logged := ne .Cookie.Value "0" }}
     <h1>Who's there?</h1>
-
     <div id="team">
         {{ range $key, $value :=  .Team }}
         <div>
-            <input id="{{ $key }}" type="checkbox" {{ if $value }}checked{{ end }}{{ if $logged }}onchange="update(event)"{{ else }}disabled{{ end }}>
+            <input id="{{ $key }}" type="checkbox" {{ if $value }}checked{{ end }}{{ if $logged }} onchange="updateUser(event)"{{ else }}disabled{{ end }}>
             <label for="{{ $key }}" class="circle"></label>
             <label for="{{ $key }}">@{{ $key }}</label>
         </div>
         {{ end }}
     </div>
 
-    {{ if .LoggedIn }}<input type="text" placeholder="What's your nick?" onkeyup="update(event)">{{ end }}
-    <p id="login" onclick="letmefuckingin(event)">Login ></p>
+    {{ if $logged }}<input type="text" placeholder="What's your nick?" onkeyup="updateUser(event)">{{ end }}
+    {{ if not $logged }}<p id="login" onclick="letmein(event)">Login ></p>{{ else }}<p id="logout" onclick="letmeout(event)">Logout ></p>{{ end }}
 </body>
 </html>

@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
                     if (!el) {
                         team.insertAdjacentHTML('beforeend', `<div>
-                            <input id="${person}" type="checkbox" onchange="update(event)">
+                            <input id="${person}" type="checkbox" onchange="updateUser(event)">
                             <label for="${person}" class="circle"></label>
                             <label for="${person}">@${person}</label>
                         </div>`);
@@ -39,7 +39,8 @@ document.addEventListener("DOMContentLoaded", function() {
     update();
 });
 
-function update(event) {
+function updateUser(event) {
+  console.log("updating user...");
     let body = "{}";
 
     if (event.target.type == "text") {
@@ -52,6 +53,7 @@ function update(event) {
         body = `{"${event.target.id}":${event.target.checked}}`;
     }
 
+    console.log("Body: " + body);
     let request = new XMLHttpRequest();
     request.open("POST", "/api", true);
     request.send(body);
@@ -66,12 +68,11 @@ function update(event) {
     }
 }
 
-function letmefuckingin(event) {
+function letmein(event) {
   event.preventDefault();
 
   let pwd = prompt("Tell me about passwords"),
     request = new XMLHttpRequest();
-  console.log(pwd); // just a debug
   request.open("POST", "/auth", true);
   request.send(pwd);
   request.onreadystatechange = function() {
@@ -80,6 +81,21 @@ function letmefuckingin(event) {
         window.location.reload();
       } else {
         alert("Your password didn't convince me... :(");
+      }
+    }
+  }
+}
+
+function letmeout(event) {
+  event.preventDefault();
+
+  let request = new XMLHttpRequest();
+  request.open("GET", "/logout", true);
+  request.send();
+  request.onreadystatechange = function() {
+    if (request.readyState == 4) {
+      if (request.status == 200) {
+        window.location.reload();
       }
     }
   }
