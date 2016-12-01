@@ -1,7 +1,7 @@
 MIT License
 
-Copyright (c) 2016 Henrique Dias <hacdias@gmail.com>
 Copyright (c) 2016 Fábio Ferreira <ffcf.pt.en@gmail.com>
+Copyright (c) 2016 Henrique Dias <hacdias@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
