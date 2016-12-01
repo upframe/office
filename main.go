@@ -46,6 +46,9 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	fmt.Println(password)
+
 	h := md5.New()
 	h.Write(password)
 	pwd = hex.EncodeToString(h.Sum(nil))
