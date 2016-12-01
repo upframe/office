@@ -5,6 +5,7 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"html/template"
 	"io/ioutil"
@@ -21,6 +22,9 @@ var (
 )
 
 func main() {
+	test := flag.Bool("secure", false, "Protocol port (https if enabled; default: http)")
+	flag.Parse()
+
 	file, err := ioutil.ReadFile("team.json")
 	if os.IsNotExist(err) {
 		file = []byte("{}")
