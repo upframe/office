@@ -12,7 +12,6 @@ document.addEventListener("DOMContentLoaded", function() {
                     window.location.reload(true);
                 }
 
-                // TODO: improve this
                 let obj = JSON.parse(request.responseText);
                 for (let person in obj) {
                     let el = document.getElementById(person);
@@ -23,6 +22,7 @@ document.addEventListener("DOMContentLoaded", function() {
                             <label for="${person}" class="circle"></label>
                             <label for="${person}">@${person}</label>
                         </div>`);
+                        
                         el = document.getElementById(person);
                     }
 
