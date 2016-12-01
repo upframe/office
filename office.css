@@ -54,10 +54,12 @@ label.circle {
     cursor: pointer;
 }
 
-input:checked + label.circle {
+input:checked+label.circle {
     background: #CDDC39;
 }
 
-#login {
-  
+#login, #logout {
+    position: fixed;
+    bottom: 1em;
+    right: 1em;
 }
