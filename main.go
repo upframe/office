@@ -6,13 +6,13 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"flag"
-	"fmt"
 	"html/template"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 )
 
 var (
@@ -47,12 +47,12 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// Remove all trailing spaces from the password
+	password = []byte(strings.TrimSpace(string(password)))
+
 	h := md5.New()
 	h.Write(password)
 	pwd = hex.EncodeToString(h.Sum(nil))
-
-	fmt.Println(string(password))
-	fmt.Println(pwd)
 
 	err = json.Unmarshal(file, &team)
 	if err != nil {
@@ -89,7 +89,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 		"Team":     team,
 		"LoggedIn": loggedIn(r),
 	}); err != nil {
-		fmt.Println(err)
+		log.Print(err)
 		http.Error(w, "Internal Server Error", 500)
 	}
 }
@@ -153,11 +153,6 @@ func auth(w http.ResponseWriter, r *http.Request) {
 	h := md5.New()
 	h.Write(rawBuffer.Bytes())
 	authPwd := hex.EncodeToString(h.Sum(nil))
-
-	fmt.Println("AUTH:")
-	fmt.Println(string(rawBuffer.Bytes()))
-	fmt.Println(authPwd)
-
 	if authPwd != pwd {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
