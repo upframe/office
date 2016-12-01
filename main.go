@@ -17,7 +17,7 @@ var (
 	team   map[string]bool
 	tpl    *template.Template
 	pwd    string
-	secure bool
+	secure bool // TODO: isn't this a flag?
 )
 
 func main() {
@@ -62,12 +62,17 @@ func index(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// TODO: this could be done on main so we don't have to open the files
+	// each request
 	tpl = template.Must(template.ParseFiles("office.html"))
 	tpl = template.Must(tpl.ParseFiles("office.js"))
 	tpl = template.Must(tpl.ParseFiles("office.css"))
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
+	// TODO: instead of doint all of this here, you could create a function
+	// like I said in line 115. And instead of sending the whole cookie, you can
+	// just send a boolean value saying if it's logged in or not.
 	cookie, err := r.Cookie("office-login")
 	if err != nil {
 		cookie = &http.Cookie{
@@ -107,16 +112,26 @@ func api(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// TODO: what if you created a function to check if you are logged in.
+	// then you could use it on Index too! Like 'if !loggedIn(r)'
 	cookie, err := r.Cookie("office-login")
 	if err != nil {
+		// TODO: are you going to return 500 if the cookie doesn't exist?
+		// I thought that it meant that you were Unauthorized...
 		http.Error(w, "Internal Server Error", 500)
 		return
 	}
 
+	// TODO: wouldn't it be a great idea to store the 'pwd' variable in md5
+	// so you don't need to calculate it over and over again?
 	h := md5.New()
 	h.Write([]byte(pwd))
+	// hex.EncodeToString(h.Sum(nil))
 
 	if cookie.Value != hex.EncodeToString(h.Sum(nil)) {
+		// TODO: I don't think this is a bug! And I don't see the point in
+		// changing the max age if you are not going to write it to the header.
+		// I think you could just delete this two lines and return 401
 		fmt.Println("bug...")
 		cookie.MaxAge = -1
 		w.WriteHeader(401)
@@ -154,8 +169,8 @@ func auth(w http.ResponseWriter, r *http.Request) {
 	rawBuffer := new(bytes.Buffer)
 	rawBuffer.ReadFrom(r.Body)
 
+	// TODO: isn't 'pwd' a string already?
 	if (string(rawBuffer.Bytes())) != string(pwd) {
-
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
@@ -170,8 +185,8 @@ func auth(w http.ResponseWriter, r *http.Request) {
 		Secure:   secure,
 		HttpOnly: true,
 	}
-	http.SetCookie(w, &cookie)
 
+	http.SetCookie(w, &cookie)
 	w.WriteHeader(200)
 }
 
@@ -181,14 +196,17 @@ func logout(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// TODO: you don't need to retrieve the cookie...
+	// you just need to replace it!
 	cookie, err := r.Cookie("office-login")
 	if err != nil || cookie != nil {
 		cookie = &http.Cookie{
 			Name:     "office-login",
-			Value:    "0",
+			MaxAge:   -1, // TODO: I changed this to -1 because because "MaxAge<0 means delete cookie now"
 			Secure:   secure,
 			HttpOnly: true,
 		}
+
 		http.SetCookie(w, cookie)
 	}
 
@@ -203,3 +221,6 @@ func save() error {
 
 	return ioutil.WriteFile("team.json", data, 0666)
 }
+
+// TODO: remove all of the other TODOs after done or understood :)
+// TODO: comment the functions and explain them :)
