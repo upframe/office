@@ -74,7 +74,6 @@ div.user {
     right: 1em;
 }
 
-
 #login input[type="submit"], #logout {
     transition: .2s;
     padding: 0.5em 1.5em;
