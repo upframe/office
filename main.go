@@ -158,7 +158,7 @@ func auth(w http.ResponseWriter, r *http.Request) {
 	cookie := http.Cookie{
 		Name:     "office-login",
 		Value:    authPwd,
-		Path:     "/", // omited MaxAge so it's default value is 0
+		Path:     "/", // omitted MaxAge so it's default value is 0
 		Secure:   secure,
 		HttpOnly: true,
 	}
