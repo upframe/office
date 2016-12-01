@@ -59,6 +59,10 @@ input:checked+label.circle {
     background: #CDDC39;
 }
 
+input:disabled+label.circle {
+    cursor: auto;
+}
+
 div.user {
     user-select: none;
 }
@@ -99,7 +103,7 @@ div.user {
 
 #login input[type="password"] {
     width: 9em;
-    margin-right: 1em;
+    margin-right: .1em;
     padding: 0.5em;
     line-height: 1;
     border: 0;

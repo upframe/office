@@ -10,4 +10,4 @@ script:
   - go build
 after_success:
   - gox -output "dist/{{.OS}}_{{.Arch}}_{{.Dir}}"
-  - ghr --username hacdias --token $GITHUB_TOKEN --replace --prerelease --debug pre-release dist/
+  - ghr --username upframe --token $GITHUB_TOKEN --replace --prerelease --debug pre-release dist/
