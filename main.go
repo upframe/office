@@ -12,18 +12,25 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 )
 
 var (
 	team   map[string]bool
 	tpl    *template.Template
 	pwd    string
-	secure bool // TODO: isn't this a flag?
+	secure bool
+	port   int
+	dev    bool
 )
 
 func main() {
-	test := flag.Bool("secure", false, "Protocol port (https if enabled; default: http)")
+	flag.BoolVar(&secure, "secure", false, "Protocol port (https if enabled; default: http)")
+	flag.IntVar(&port, "port", 9696, "HTTP service port")
+	flag.BoolVar(&dev, "dev", false, "Development mode")
 	flag.Parse()
+
+	tpl = template.Must(template.ParseFiles("office.html", "office.js", "office.css"))
 
 	file, err := ioutil.ReadFile("team.json")
 	if os.IsNotExist(err) {
@@ -39,7 +46,9 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	pwd = string(password)
+	h := md5.New()
+	h.Write(password)
+	pwd = hex.EncodeToString(h.Sum(nil))
 
 	err = json.Unmarshal(file, &team)
 	if err != nil {
@@ -50,7 +59,7 @@ func main() {
 	http.HandleFunc("/logout", logout)
 	http.HandleFunc("/api", api)
 	http.HandleFunc("/", index)
-	if err := http.ListenAndServe(":9696", nil); err != nil {
+	if err := http.ListenAndServe(":"+strconv.Itoa(port), nil); err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
 }
@@ -61,35 +70,20 @@ func index(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if r.Method != "GET" {
+	if r.Method != http.MethodGet {
 		w.WriteHeader(405)
 		return
 	}
 
-	// TODO: this could be done on main so we don't have to open the files
-	// each request
-	tpl = template.Must(template.ParseFiles("office.html"))
-	tpl = template.Must(tpl.ParseFiles("office.js"))
-	tpl = template.Must(tpl.ParseFiles("office.css"))
+	if dev {
+		tpl = template.Must(template.ParseFiles("office.html", "office.js", "office.css"))
+	}
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
-	// TODO: instead of doint all of this here, you could create a function
-	// like I said in line 115. And instead of sending the whole cookie, you can
-	// just send a boolean value saying if it's logged in or not.
-	cookie, err := r.Cookie("office-login")
-	if err != nil {
-		cookie = &http.Cookie{
-			Name:     "office-login",
-			Value:    "0",
-			Secure:   secure,
-			HttpOnly: true,
-		}
-	}
-
 	if err := tpl.Execute(w, map[string]interface{}{
-		"Team":   team,
-		"Cookie": cookie,
+		"Team":     team,
+		"LoggedIn": loggedIn(r),
 	}); err != nil {
 		fmt.Println(err)
 		http.Error(w, "Internal Server Error", 500)
@@ -112,33 +106,12 @@ func api(w http.ResponseWriter, r *http.Request) {
 
 	// If it's different from POST, return not allowed
 	if r.Method != http.MethodPost {
-		http.Error(w, "Method Not Allowed", 405)
+		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
 	}
 
-	// TODO: what if you created a function to check if you are logged in.
-	// then you could use it on Index too! Like 'if !loggedIn(r)'
-	cookie, err := r.Cookie("office-login")
-	if err != nil {
-		// TODO: are you going to return 500 if the cookie doesn't exist?
-		// I thought that it meant that you were Unauthorized...
-		http.Error(w, "Internal Server Error", 500)
-		return
-	}
-
-	// TODO: wouldn't it be a great idea to store the 'pwd' variable in md5
-	// so you don't need to calculate it over and over again?
-	h := md5.New()
-	h.Write([]byte(pwd))
-	// hex.EncodeToString(h.Sum(nil))
-
-	if cookie.Value != hex.EncodeToString(h.Sum(nil)) {
-		// TODO: I don't think this is a bug! And I don't see the point in
-		// changing the max age if you are not going to write it to the header.
-		// I think you could just delete this two lines and return 401
-		fmt.Println("bug...")
-		cookie.MaxAge = -1
-		w.WriteHeader(401)
+	if !loggedIn(r) {
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
@@ -146,9 +119,9 @@ func api(w http.ResponseWriter, r *http.Request) {
 	rawBuffer := new(bytes.Buffer)
 	rawBuffer.ReadFrom(r.Body)
 
-	err = json.Unmarshal(rawBuffer.Bytes(), &object)
+	err := json.Unmarshal(rawBuffer.Bytes(), &object)
 	if err != nil {
-		w.WriteHeader(500)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
@@ -157,11 +130,11 @@ func api(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if save() != nil {
-		w.WriteHeader(500)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	w.WriteHeader(200)
+	w.WriteHeader(http.StatusOK)
 }
 
 func auth(w http.ResponseWriter, r *http.Request) {
@@ -173,48 +146,55 @@ func auth(w http.ResponseWriter, r *http.Request) {
 	rawBuffer := new(bytes.Buffer)
 	rawBuffer.ReadFrom(r.Body)
 
-	// TODO: isn't 'pwd' a string already?
-	if (string(rawBuffer.Bytes())) != string(pwd) {
+	h := md5.New()
+	h.Write(rawBuffer.Bytes())
+	authPwd := hex.EncodeToString(h.Sum(nil))
+
+	if authPwd != pwd {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
-	h := md5.New()
-	h.Write(rawBuffer.Bytes())
-
 	cookie := http.Cookie{
 		Name:     "office-login",
-		Value:    hex.EncodeToString(h.Sum(nil)),
+		Value:    authPwd,
 		Path:     "/", // omited MaxAge so it's default value is 0
 		Secure:   secure,
 		HttpOnly: true,
 	}
 
 	http.SetCookie(w, &cookie)
-	w.WriteHeader(200)
+	w.WriteHeader(http.StatusOK)
 }
 
 func logout(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		w.WriteHeader(405)
+		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
 	}
 
-	// TODO: you don't need to retrieve the cookie...
-	// you just need to replace it!
-	cookie, err := r.Cookie("office-login")
-	if err != nil || cookie != nil {
-		cookie = &http.Cookie{
-			Name:     "office-login",
-			MaxAge:   -1, // TODO: I changed this to -1 because because "MaxAge<0 means delete cookie now"
-			Secure:   secure,
-			HttpOnly: true,
-		}
-
-		http.SetCookie(w, cookie)
+	cookie := &http.Cookie{
+		Name:     "office-login",
+		MaxAge:   -1,
+		Secure:   secure,
+		HttpOnly: true,
 	}
 
-	w.WriteHeader(200)
+	http.SetCookie(w, cookie)
+
+	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+}
+
+func loggedIn(r *http.Request) bool {
+	cookie, err := r.Cookie("office-login")
+	if err != nil {
+		return false
+	}
+
+	if cookie.Value != pwd {
+		return false
+	}
+	return true
 }
 
 func save() error {
@@ -225,6 +205,3 @@ func save() error {
 
 	return ioutil.WriteFile("team.json", data, 0666)
 }
-
-// TODO: remove all of the other TODOs after done or understood :)
-// TODO: comment the functions and explain them :)

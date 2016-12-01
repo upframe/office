@@ -40,63 +40,49 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function updateUser(event) {
-  console.log("updating user...");
-    let body = "{}";
+  let body = "{}";
 
-    if (event.target.type == "text") {
-        if (event.keyCode != 13) {
-            return true
-        }
-
-        body = `{"${event.target.value}":true}`;
-    } else {
-        body = `{"${event.target.id}":${event.target.checked}}`;
+  if (event.target.type == "text") {
+    if (event.keyCode != 13) {
+      return true
     }
 
-    console.log("Body: " + body);
-    let request = new XMLHttpRequest();
-    request.open("POST", "/api", true);
-    request.send(body);
-    request.onreadystatechange = function() {
-        if (request.readyState == 4) {
-            if (request.status != 200) {
-                window.location.reload(true);
-            }
+    body = `{"${event.target.value}":true}`;
+  } else {
+    body = `{"${event.target.id}":${event.target.checked}}`;
+  }
 
-            if (event.target.type == "text") window.location.reload(true);
-        }
+  let request = new XMLHttpRequest();
+  request.open("POST", "/api", true);
+  request.send(body);
+  request.onreadystatechange = function() {
+    if (request.readyState == 4) {
+      if (request.status != 200) {
+        window.location.reload(true);
+      }
+
+      if (event.target.type == "text") window.location.reload(true);
     }
+  }
 }
 
 function letmein(event) {
-  event.preventDefault();
+    event.preventDefault();
 
-  let pwd = prompt("Tell me about passwords"),
-    request = new XMLHttpRequest();
-  request.open("POST", "/auth", true);
-  request.send(pwd);
-  request.onreadystatechange = function() {
-    if (request.readyState == 4) {
-      if (request.status == 200) {
-        window.location.reload();
-      } else {
-        alert("Your password didn't convince me... :(");
-      }
+    let el = document.querySelector('#login input[type="password"]'),
+        request = new XMLHttpRequest();
+    request.open("POST", "/auth", true);
+    request.send(el.value);
+    request.onreadystatechange = function() {
+        if (request.readyState == 4) {
+            if (request.status == 200) {
+                window.location.reload();
+            } else {
+                el.classList.add("invalid");
+                setTimeout(function() {
+                    el.classList.remove("invalid");
+                }, 500);
+            }
+        }
     }
-  }
-}
-
-function letmeout(event) {
-  event.preventDefault();
-
-  let request = new XMLHttpRequest();
-  request.open("GET", "/logout", true);
-  request.send();
-  request.onreadystatechange = function() {
-    if (request.readyState == 4) {
-      if (request.status == 200) {
-        window.location.reload();
-      }
-    }
-  }
 }
