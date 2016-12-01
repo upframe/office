@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function() {
         request.open("GET", "/api");
         request.send();
         request.onreadystatechange = function() {
-            if (request.readyState == 4) {
+          if (request.readyState == 4) {
                 if (request.status != 200) {
                     window.location.reload(true);
                 }
@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function() {
                             <label for="${person}" class="circle"></label>
                             <label for="${person}">@${person}</label>
                         </div>`);
-                        
+
                         el = document.getElementById(person);
                     }
 
