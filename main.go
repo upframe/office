@@ -47,11 +47,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Println(password)
-
 	h := md5.New()
 	h.Write(password)
 	pwd = hex.EncodeToString(h.Sum(nil))
+
+	fmt.Println(string(password))
+	fmt.Println(pwd)
 
 	err = json.Unmarshal(file, &team)
 	if err != nil {
@@ -152,6 +153,10 @@ func auth(w http.ResponseWriter, r *http.Request) {
 	h := md5.New()
 	h.Write(rawBuffer.Bytes())
 	authPwd := hex.EncodeToString(h.Sum(nil))
+
+	fmt.Println("AUTH:")
+	fmt.Println(string(rawBuffer.Bytes()))
+	fmt.Println(authPwd)
 
 	if authPwd != pwd {
 		w.WriteHeader(http.StatusUnauthorized)
