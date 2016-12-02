@@ -130,6 +130,11 @@ func api(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for key, val := range object {
+		if key[0] == '-' {
+			delete(team, strings.TrimPrefix(key, "-"))
+			continue
+		}
+
 		team[key] = val
 	}
 
