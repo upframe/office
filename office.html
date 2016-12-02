@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Who's there?</title>
+    <title>Who's in the office?</title>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
     <script>{{ template "office.js"}}</script>
     <style>{{ template "office.css" }}</style>
@@ -9,7 +9,7 @@
 
 <body>
     {{ $logged := .LoggedIn }}
-    <h1>Who's there?</h1>
+    <h1>Who's in the office?</h1>
     <div id="team">
         {{ range $key, $value :=  .Team }}
         <div class="user">
