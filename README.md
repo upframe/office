@@ -1,4 +1,4 @@
-![Who's there?](https://cloud.githubusercontent.com/assets/5447088/22626960/4f0244ea-ebb0-11e6-9262-016e267266ac.gif)
+![Who's there?](https://cloud.githubusercontent.com/assets/5447088/22626990/14522f80-ebb1-11e6-9b40-9a027ed3478d.gif)
 
 [![Build](https://img.shields.io/travis/upframe/whosthere.svg?style=flat-square)](https://travis-ci.org/upframe/whosthere)
 [![Go Report Card](https://goreportcard.com/badge/github.com/upframe/whosthere?style=flat-square)](https://goreportcard.com/report/upframe/whosthere)
