@@ -4,3 +4,9 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/upframe/whosthere?style=flat-square)](https://goreportcard.com/report/upframe/whosthere)
 
 This simple Go program allows you to know who is in the office of your company. The members of the company can change their own state. This powers [office.upframe.xyz](https://office.upframe.xyz/).
+
+## Usage
+
+There must be a ```thisisnotthepassword.txt``` file in the same place where the binary is being executed and it must contain the password that'll be used by the members to change their status.
+
+You can change the port and activate/deactivate the SSL with the flags ```--port``` and ```--secure```, respectively.
