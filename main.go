@@ -16,23 +16,32 @@ import (
 )
 
 var (
-	team   map[string]bool
-	tpl    *template.Template
-	pwd    string
-	secure bool
-	port   int
-	dev    bool
+	team       map[string]bool
+	tpl        *template.Template
+	pwd        string
+	secure     bool
+	port       int
+	dev        bool
+	teamFile   string
+	staticPath string
+	pwdFile    string
 )
 
-func main() {
+func init() {
 	flag.BoolVar(&secure, "secure", false, "Protocol port (https if enabled; default: http)")
 	flag.IntVar(&port, "port", 9696, "HTTP service port")
 	flag.BoolVar(&dev, "dev", false, "Development mode")
+	flag.StringVar(&teamFile, "team", "team.json", "Place to save the status")
+	flag.StringVar(&staticPath, "static", "./", "Static files storage")
+	flag.StringVar(&pwdFile, "pwd", "thisisnotthepassword.txt", "Password file")
+}
+
+func main() {
 	flag.Parse()
 
 	tpl = template.Must(template.ParseFiles("office.html", "office.js", "office.css"))
 
-	file, err := ioutil.ReadFile("team.json")
+	file, err := ioutil.ReadFile(teamFile)
 	if os.IsNotExist(err) {
 		file = []byte("{}")
 		err = ioutil.WriteFile("team.json", file, 0666)
@@ -211,5 +220,5 @@ func save() error {
 		return err
 	}
 
-	return ioutil.WriteFile("team.json", data, 0666)
+	return ioutil.WriteFile(teamFile, data, 0666)
 }
