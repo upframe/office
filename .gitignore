@@ -1,5 +1,4 @@
 thisisnotthepassword.txt
 team.json
 node_modules
-*.lock
-/node_modules
+package-lock.json
