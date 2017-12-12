@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="/assets/styles.css" rel="stylesheet" type="text/css" </link>
+  </head>
+<body>
+  <h1>Welcome to the office <%= nickname %></h1>
+  <p> The following colleagues are in the office: </p>
+  <ul>
+    <% users.forEach(function(item){ %>
+      <li><%= item %></li>
+    <% }); %>
+  </ul>
+</body>
+</html>
