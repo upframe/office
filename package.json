@@ -1,5 +1,6 @@
 {
   "name": "whosthere",
+  "private": true,
   "version": "1.0.0",
   "description": "Virtual office with password access",
   "main": "app.js",
@@ -8,10 +9,18 @@
     "ejs": "^2.5.7",
     "express": "^4.16.2"
   },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "devDependencies": {
+    "pre-commit": "^1.2.2",
+    "standard": "^10.0.3"
   },
+  "scripts": {
+    "start": "node app.js",
+    "test": "standard",
+    "lint": "standard"
+  },
+  "pre-commit": [
+    "lint"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/upframe/whosthere.git"
