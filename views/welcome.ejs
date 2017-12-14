@@ -7,13 +7,14 @@
 
     <h1>Welcome to the office</h1>
 
+    <p><%= message %></p>
     <form id="login-form" method="POST" action="/">
 
       <label for="nickname">What's your name?</label><br><br>
-      <input type="text" name="nickname"><br><br>
+      <input type="text" name="nickname" value=<%= nickTried %>><br><br>
 
       <label for="password">What's your password</label><br><br>
-      <input type="password" name="password"><br><br><br>
+      <input type="password" name="password" value=<%= passTried %>><br><br><br>
 
       <input type="submit" value="submit">
 
