@@ -1,7 +1,9 @@
 const fs = require('fs')
+const EventEmitter = require('events')
 
-class UsersStore {
+class UsersStore extends EventEmitter {
   constructor (path) {
+    super()
     this.path = path
     this.store = []
 
@@ -17,6 +19,7 @@ class UsersStore {
   }
 
   _write () {
+    this.emit('change', this.store)
     fs.writeFileSync(this.path, JSON.stringify(this.store))
   }
 

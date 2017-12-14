@@ -3,10 +3,9 @@
   "private": true,
   "version": "1.0.0",
   "description": "Virtual office with password access",
-  "main": "app.js",
+  "main": "src/index.js",
   "dependencies": {
     "body-parser": "^1.18.2",
-    "ejs": "^2.5.7",
     "express": "^4.16.2"
   },
   "devDependencies": {
@@ -14,7 +13,7 @@
     "standard": "^10.0.3"
   },
   "scripts": {
-    "start": "node app.js",
+    "start": "node src/index.js",
     "test": "standard",
     "lint": "standard"
   },

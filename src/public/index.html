@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link href="/css/styles.css" rel="stylesheet" type="text/css" </link>
+    <link href="/css/styles.css" rel="stylesheet" type="text/css">
   </head>
   <body>
 
+    <!-- Logged Out
     <h1>Welcome to the office</h1>
 
     <p><%= message %></p>
@@ -18,6 +19,19 @@
 
       <input type="submit" value="submit">
 
-    </form>
+    </form> -->
+
+    <!-- Logged in
+
+    <h1>Welcome to the office <%= nickname %></h1>
+    <p> The following colleagues are in the office: </p>
+    <ul>
+      <% for (var i = 0, len = users.length; i < len; i++) { %>
+        <li><%= users[i] %></li>
+      <% } %>
+    </ul>
+  -->
+
+    <script src="./app.js"></script>
   </body>
 </html>
