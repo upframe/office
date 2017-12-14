@@ -1,13 +1,10 @@
 const express = require('express')
 const bodyParser = require('body-parser')
-const fs = require('fs')
-
 const UsersStore = require('./users')
 
 const app = express()
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
 const password = process.argv[2]
-
 const users = new UsersStore('users.json')
 
 app.set('view engine', 'ejs')
@@ -19,10 +16,10 @@ app.get('/', function (req, res) {
     passTried: '',
     message: ''
   })
-});
+})
 
 app.post('/', urlencodedParser, function (req, res) {
-  if ( password === req.body.password ) {
+  if (password === req.body.password) {
     users.add(req.body.nickname)
 
     res.render('office', {
