@@ -1,4 +1,4 @@
-var ws = new WebSocket('ws://localhost:40510')
+var ws = new window.WebSocket('ws://localhost:40510')
 
 function sendData () {
   var toSubmitNickname = document.getElementById('nickname').value
