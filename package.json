@@ -6,7 +6,8 @@
   "main": "src/index.js",
   "dependencies": {
     "body-parser": "^1.18.2",
-    "express": "^4.16.2"
+    "express": "^4.16.2",
+    "ws": "^3.3.3"
   },
   "devDependencies": {
     "pre-commit": "^1.2.2",

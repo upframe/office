@@ -4,18 +4,30 @@
     <link href="/css/styles.css" rel="stylesheet" type="text/css">
   </head>
   <body>
+    <form>
+      Write nickname:<br>
+      <input id="nickname" type="text" name="nickname" value="">
+      <br>
+      Write password:<br>
+      <input id="password" type="password" name="password" value="">
+      <br><br>
+      <input id="clickMe" type="button" value="Submit" onclick="sendData()">
+    </form>
+    <script src="./app.js"></script>
+  </body>
+</html>
+
 
     <!-- Logged Out
     <h1>Welcome to the office</h1>
 
-    <p><%= message %></p>
-    <form id="login-form" method="POST" action="/">
+    <form id="login-form" onsubmit="connect(nickname, password)">
 
       <label for="nickname">What's your name?</label><br><br>
-      <input type="text" name="nickname" value=<%= nickTried %>><br><br>
+      <input type="text" name="nickname"><br><br>
 
       <label for="password">What's your password</label><br><br>
-      <input type="password" name="password" value=<%= passTried %>><br><br><br>
+      <input type="password" name="password"><br><br><br>
 
       <input type="submit" value="submit">
 
@@ -31,7 +43,3 @@
       <% } %>
     </ul>
   -->
-
-    <script src="./app.js"></script>
-  </body>
-</html>
