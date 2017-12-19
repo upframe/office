@@ -1,9 +1,9 @@
-var ws = new WebSocket('ws://localhost:40510');
+var ws = new WebSocket('ws://localhost:40510')
 
 function sendData () {
-  var toSubmitNickname = document.getElementById("nickname").value
-  var toSubmitPassword = document.getElementById("password").value
-  ws.send(toSubmitNickname + "[UpframeRules]" + toSubmitPassword);
+  var toSubmitNickname = document.getElementById('nickname').value
+  var toSubmitPassword = document.getElementById('password').value
+  ws.send(toSubmitNickname + '[UpframeRules]' + toSubmitPassword)
 }
 
 // TODO: the idea!

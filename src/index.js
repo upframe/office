@@ -11,8 +11,8 @@ var WebSocketServer = require('ws').Server,
 
 app.use(express.static(path.join(__dirname, 'public')))
 app.get('/', function (req, res) {
-    res.sendFile(__dirname + '/index.html');
-    console.log('We just received a request for index.html')
+  res.sendFile(__dirname + '/index.html')
+  console.log('We just received a request for index.html')
 })
 app.listen(80, function () {
   console.log('All systems are up and listening on port 80')
@@ -24,9 +24,8 @@ app.listen(80, function () {
 // Se sim enviar array de UsersStore
 // Se nao enviar erro
 wss.on('connection', function (ws) {
-
-  ws.isAlive = true;
-  ws.on('pong', heartbeat);
+  ws.isAlive = true
+  ws.on('pong', heartbeat)
 
   ws.on('message', function (message) {
     var nicknameReceived = message.split('[UpframeRules]')[0]
@@ -44,22 +43,20 @@ wss.on('connection', function (ws) {
   users.on('change', function () {
     ws.send(users.toArray())
   })
-
 })
 
-function heartbeat() {
-  this.isAlive = true;
+function heartbeat () {
+  this.isAlive = true
 }
 
-const interval = setInterval(function ping() {
-  wss.clients.forEach(function each(ws) {
-    if (ws.isAlive === false) return ws.terminate();
+const interval = setInterval(function ping () {
+  wss.clients.forEach(function each (ws) {
+    if (ws.isAlive === false) return ws.terminate()
 
-    ws.isAlive = false;
-    ws.ping('', false, true);
-  });
-}, 30000);
-
+    ws.isAlive = false
+    ws.ping('', false, true)
+  })
+}, 30000)
 
 // TODO: the idea!
 // THis is the SERVER-SIDE part which is VERY small!
