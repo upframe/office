@@ -1,15 +1,28 @@
 const express = require('express')
 const path = require('path')
 const UsersStore = require('./users')
+const WebSocket = require('ws')
 
 const app = express()
 const password = process.argv[2]
 const users = new UsersStore('users.json')
 
+<<<<<<< HEAD
 var WebSocketServer = require('ws').Server
 var wss = new WebSocketServer({port: 40510})
 
 app.use(express.static(path.join(__dirname, 'public')))
+=======
+const wss = new WebSocket.Server({port: 40510})
+
+app.use(express.static(path.join(__dirname, 'public')))
+
+app.get('/', function (req, res) {
+  res.sendFile(__dirname + '/index.html')
+  console.log('We just received a request for index.html')
+})
+
+>>>>>>> 8ca61d772ad83a83e81d5d958696be751c55a1ad
 app.listen(80, function () {
   console.log('All systems are up and listening on port 80')
   console.log('Password is: %s', password)
@@ -83,29 +96,3 @@ wss.on('connection', function (ws) {
 //
 // Please check this link: https://medium.com/factory-mind/websocket-node-js-express-step-by-step-using-typescript-725114ad5fe4
 // They use TypeScript but it's basically the same thing. Hope you get the idea.
-
-/*
-app.get('/', function (req, res) {
-  res.render('welcome', {
-    nickTried: '',
-    passTried: '',
-    message: ''
-  })
-})
-
-app.post('/', urlencodedParser, function (req, res) {
-  if (password === req.body.password) {
-    users.add(req.body.nickname)
-
-    res.render('office', {
-      nickname: req.body.nickname,
-      users: users.toArray()
-    })
-  } else {
-    res.render('welcome', {
-      nickTried: req.body.nickname,
-      passTried: req.body.password,
-      message: 'Wrong password'
-    })
-  }
-}) */
