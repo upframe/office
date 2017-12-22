@@ -27,3 +27,7 @@ p, li {
 form {
   text-align: center;
 }
+
+#logout {
+  display: none;
+}

@@ -4,15 +4,21 @@
     <link href="/css/styles.css" rel="stylesheet" type="text/css">
   </head>
   <body>
-    <form>
+    <form id="form">
       Write nickname:<br>
       <input id="nickname" type="text" name="nickname" value="">
       <br>
       Write password:<br>
       <input id="password" type="password" name="password" value="">
       <br><br>
-      <input id="clickMe" type="button" value="Submit" onclick="sendData()">
+      <input id="clickMe" type="button" value="Submit" onclick="onLogin()">
     </form>
+
+    <ul id="list">
+
+    </ul>
+    <input id="logout" type="button" value="Log Out" onclick="showLogin()">
+
     <script src="./app.js"></script>
   </body>
 </html>

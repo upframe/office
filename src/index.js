@@ -6,14 +6,10 @@ const app = express()
 const password = process.argv[2]
 const users = new UsersStore('users.json')
 
-var WebSocketServer = require('ws').Server,
-  wss = new WebSocketServer({port: 40510})
+var WebSocketServer = require('ws').Server
+var wss = new WebSocketServer({port: 40510})
 
 app.use(express.static(path.join(__dirname, 'public')))
-app.get('/', function (req, res) {
-    res.sendFile(__dirname + '/index.html');
-    console.log('We just received a request for index.html')
-})
 app.listen(80, function () {
   console.log('All systems are up and listening on port 80')
   console.log('Password is: %s', password)
@@ -24,42 +20,54 @@ app.listen(80, function () {
 // Se sim enviar array de UsersStore
 // Se nao enviar erro
 wss.on('connection', function (ws) {
+  var thisUser = ''
+  //ws.isAlive = true
+  ws.isAuthenticated = false
+  //ws.on('pong', heartbeat)
 
-  ws.isAlive = true;
-  ws.on('pong', heartbeat);
+  ws.on('message', (message) => {
+    if (message === 'ping') {
+      return
+    }
+    let splitted = JSON.parse(message)
+    let nickname = splitted[0]
+    let passwordReceived = splitted[1]
+    console.log(message)
+    if (password !== passwordReceived) {
+      return
+    }
+    console.log(nickname)
+    ws.isAuthenticated = true
+    thisUser = nickname
+    users.add(nickname)
+  })
 
-  ws.on('message', function (message) {
-    var nicknameReceived = message.split('[UpframeRules]')[0]
-    var passwordReceived = message.split('[UpframeRules]')[1]
-    if (passwordReceived === password) {
-      console.log('received: %s', message)
-      if (!users.exists(nicknameReceived)) {
-        users.add(nicknameReceived)
-      }
-    } else {
-      ws.terminate()
+  ws.on('close', function close () {
+    ws.isAuthenticated = false
+    users.remove(thisUser)
+    console.log('disconnected')
+  })
+
+  users.on('change', () => {
+    console.log('detected change1')
+    if (ws.isAuthenticated) {
+      ws.send(JSON.stringify(users.toArray()))
     }
   })
-
-  users.on('change', function () {
-    ws.send(users.toArray())
-  })
-
 })
 
-function heartbeat() {
-  this.isAlive = true;
-}
+//function heartbeat () {
+//  this.isAlive = true
+//}
 
-const interval = setInterval(function ping() {
-  wss.clients.forEach(function each(ws) {
-    if (ws.isAlive === false) return ws.terminate();
+//const interval = setInterval(function ping () {
+//  wss.clients.forEach(function each (ws) {
+//    if (ws.isAlive === false) return ws.terminate()
 
-    ws.isAlive = false;
-    ws.ping('', false, true);
-  });
-}, 30000);
-
+//    ws.isAlive = false
+//    ws.ping('', false, true)
+//  })
+//}, 30000)
 
 // TODO: the idea!
 // THis is the SERVER-SIDE part which is VERY small!
