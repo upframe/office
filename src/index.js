@@ -7,25 +7,14 @@ const app = express()
 const password = process.argv[2]
 const users = new UsersStore('users.json')
 
-<<<<<<< HEAD
 var WebSocketServer = require('ws').Server
-var wss = new WebSocketServer({port: 40510})
 
 app.use(express.static(path.join(__dirname, 'public')))
-=======
 const wss = new WebSocket.Server({port: 40510})
 
 app.use(express.static(path.join(__dirname, 'public')))
-
-app.get('/', function (req, res) {
-  res.sendFile(__dirname + '/index.html')
-  console.log('We just received a request for index.html')
-})
-
->>>>>>> 8ca61d772ad83a83e81d5d958696be751c55a1ad
 app.listen(80, function () {
-  console.log('All systems are up and listening on port 80')
-  console.log('Password is: %s', password)
+  console.log('Server started. Password is: %s', password)
 })
 
 // Web Socket
@@ -40,6 +29,10 @@ wss.on('connection', function (ws) {
 
   ws.on('message', (message) => {
     if (message === 'ping') {
+      return
+    } else if (message === 'LogMeOut') {
+      ws.isAuthenticated = false
+      users.remove(thisUser)
       return
     }
     let splitted = JSON.parse(message)

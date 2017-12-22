@@ -53,7 +53,7 @@ function showLogin() {
   y.style.display = "none"
   var z = document.getElementById("logout")
   z.style.display = "none"
-  ws.close()
+  ws.send('LogMeOut')
 }
 
 //var x = document.getElementById("myDIV");
