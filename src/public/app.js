@@ -12,7 +12,7 @@ const status = {
   wrongPassword: 'WRONG_PWD'
 }
 
-var ws = new window.WebSocket('ws://localhost:40510')
+var ws = new window.WebSocket(`ws://${window.location.host}/ws`)
 
 ws.addEventListener('open', (event) => {
   ws.send('ping')

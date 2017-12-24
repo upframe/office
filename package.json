@@ -5,13 +5,13 @@
   "description": "Virtual office with password access",
   "main": "src/index.js",
   "dependencies": {
-    "body-parser": "^1.18.2",
-    "express": "^4.16.2",
-    "ws": "^3.3.3"
+    "body-parser": "1.18.2",
+    "express": "4.16.2",
+    "ws": "3.3.3"
   },
   "devDependencies": {
-    "pre-commit": "^1.2.2",
-    "standard": "^10.0.3"
+    "pre-commit": "1.2.2",
+    "standard": "10.0.3"
   },
   "scripts": {
     "start": "node src/index.js",
