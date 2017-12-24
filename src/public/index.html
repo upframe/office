@@ -1,51 +1,25 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <title>Who's there?</title>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
     <link href="/css/styles.css" rel="stylesheet" type="text/css">
   </head>
   <body>
-    <form id="form">
-      Write nickname:<br>
-      <input id="nickname" type="text" name="nickname" value="">
-      <br>
-      Write password:<br>
-      <input id="password" type="password" name="password" value="">
-      <br><br>
-      <input id="clickMe" type="button" value="Submit" onclick="onLogin()">
+    <h1>Who's in the office?</h1>
+
+    <ul id="users"></ul>
+
+    <!-- When Logged In -->
+    <button id="logout" >Logout</button>
+
+    <!-- When Logged Out -->
+    <form id="login">
+      <input type="text" name="nickname" placeholder="Nickname">
+      <input type="password" name="password" placeholder="Password">
+      <input type="submit" value="Login">
     </form>
-
-    <ul id="list">
-
-    </ul>
-    <input id="logout" type="button" value="Log Out" onclick="showLogin()">
 
     <script src="./app.js"></script>
   </body>
 </html>
-
-
-    <!-- Logged Out
-    <h1>Welcome to the office</h1>
-
-    <form id="login-form" onsubmit="connect(nickname, password)">
-
-      <label for="nickname">What's your name?</label><br><br>
-      <input type="text" name="nickname"><br><br>
-
-      <label for="password">What's your password</label><br><br>
-      <input type="password" name="password"><br><br><br>
-
-      <input type="submit" value="submit">
-
-    </form> -->
-
-    <!-- Logged in
-
-    <h1>Welcome to the office <%= nickname %></h1>
-    <p> The following colleagues are in the office: </p>
-    <ul>
-      <% for (var i = 0, len = users.length; i < len; i++) { %>
-        <li><%= users[i] %></li>
-      <% } %>
-    </ul>
-  -->

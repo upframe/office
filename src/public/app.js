@@ -1,3 +1,17 @@
+const bodyElement = document.querySelector('body')
+const loginElement = document.querySelector('#login')
+const passwordElement = document.querySelector('input[name="password"]')
+const nicknameElement = document.querySelector('input[name="nickname"]')
+const logoutElement = document.querySelector('#logout')
+const usersElement = document.querySelector('#users')
+
+const status = {
+  loggedIn: 'LOGGED_IN',
+  loggedOut: 'LOGGED_OUT',
+  logout: 'LOGOUT',
+  wrongPassword: 'WRONG_PWD'
+}
+
 var ws = new window.WebSocket('ws://localhost:40510')
 
 ws.addEventListener('open', (event) => {
@@ -5,67 +19,61 @@ ws.addEventListener('open', (event) => {
 })
 
 ws.addEventListener('message', (event) => {
-  // recebe os utilizadores e mostra
-  var received = JSON.parse(event.data)
-  display(received)
-  //received.forEach(function (entry) {
-  //  console.log(entry)
-  //  function1(entry)
-  //})
+  switch (event.data) {
+    case status.loggedIn:
+      bodyElement.classList.add('loggedIn')
+      passwordElement.value = ''
+      nicknameElement.value = ''
+      break
+    case status.loggedOut:
+      bodyElement.classList.remove('loggedIn')
+      break
+    case status.wrongPassword:
+      wrongPassword()
+      break
+    default:
+      display(JSON.parse(event.data))
+  }
 })
 
 window.onbeforeunload = (event) => {
   ws.close()
 }
-// ---------
 
-function onLogin () {
-    var loginArray = [document.getElementById('nickname').value, document.getElementById('password').value]
-    ws.send(JSON.stringify(loginArray))
+function wrongPassword () {
+  passwordElement.classList.add('invalid')
+  setTimeout(() => {
+    passwordElement.classList.remove('invalid')
+  }, 500)
 }
 
-function display(users) {
-  hideLoggin()
-  var ul = document.getElementById("list");
-  while (ul.firstChild) {
-    ul.removeChild(ul.firstChild);
-  }
+function login (event) {
+  event.preventDefault()
+
+  const data = [
+    nicknameElement.value,
+    passwordElement.value
+  ]
+
+  ws.send(JSON.stringify(data))
+}
+
+function display (users) {
+  usersElement.innerHTML = ''
+
   users.forEach(function (text) {
-    var li = document.createElement("li");
-    li.appendChild(document.createTextNode(text));
-    ul.appendChild(li);
+    const li = document.createElement('li')
+    li.appendChild(document.createTextNode(text))
+    usersElement.appendChild(li)
   })
 }
 
-function hideLoggin() {
-    var x = document.getElementById("form")
-    x.style.display = "none"
-    var y = document.getElementById("list")
-    y.style.display = "block"
-    var z = document.getElementById("logout")
-    z.style.display = "block"
+function logout (event) {
+  event.preventDefault()
+  ws.send(status.logout)
 }
 
-function showLogin() {
-  var x = document.getElementById("form")
-  x.style.display = "block"
-  var y = document.getElementById("list")
-  y.style.display = "none"
-  var z = document.getElementById("logout")
-  z.style.display = "none"
-  ws.send('LogMeOut')
-}
-
-//var x = document.getElementById("myDIV");
-//if (x.style.display === "none") {
-//    x.style.display = "block";
-//} else {
-//    x.style.display = "none";
-//}
-// TODO: the idea!
-// THis is the FRONT-ENDE part.
-// Here, you must:
-//  - Manipulate the DOM to show/hide the elements you want or don't want when the user is logged in
-//    or logged out.
-//  - Connect to the Web Socket (created on index.js) and do the auth through the web socket. If it's correct
-//    show the users and such. otherwhise, just tell the user the pass is incorrect.
+document.addEventListener('DOMContentLoaded', () => {
+  loginElement.addEventListener('submit', login)
+  logoutElement.addEventListener('click', logout)
+})
