@@ -10,7 +10,6 @@ This simple NodeJS Web App allows you to know who is in the office of your compa
 ```
 git clone https://github.com/upframe/whosthere.git
 cd whosthere
-git checkout nodejs_port
 npm install
 ```
 
@@ -19,7 +18,7 @@ npm install
 Important environment variables:
 
 + `WHOSTHERE_PORT` (default is `8080`)
-+ `WHOSTHERE_PWD` (default is `default_password`)
++ `WHOSTHERE_PWD` (default is `pwd`)
 
 ```
 npm run start
