@@ -11,7 +11,7 @@ const status = {
   wrongPassword: 'WRONG_PWD'
 }
 
-const password = process.env.WHOSTHERE_PWD || 'default_password'
+const password = process.env.WHOSTHERE_PWD || 'pwd'
 const users = new UsersStore('users.json')
 
 const app = express()
@@ -33,13 +33,15 @@ wss.on('connection', function (ws) {
    // Everytime we get a message it can either be a ping, a logout request or a
    // login attempt
   ws.on('message', (message) => {
-    if (message === 'ping') {
-      return
-    } else if (message === status.logout) {
+    if (message === status.logout) {
       return logout(ws)
+    } else if (ws.user === '') {
+      login(ws, message)
+    } else {
+      users.remove(ws.user)
+      ws.user = message
+      users.add(ws.user)
     }
-
-    login(ws, message)
   })
 
   // When a connection closes we have to clean our user collection. We remove the
@@ -62,17 +64,12 @@ wss.on('connection', function (ws) {
 // a successful connection status if he did and a wrongPassword status if he didn't
 function login (ws, message) {
   try {
-    const data = JSON.parse(message)
-    const nickname = data[0]
-    const passwordReceived = data[1]
-
-    if (password !== passwordReceived) {
+    if (password !== message) {
       ws.send(status.wrongPassword)
       return
     }
 
-    users.add(nickname)
-    ws.user = nickname
+    ws.user = 'Unknown'
     ws.send(status.loggedIn)
   } catch (e) {
     console.log(e)

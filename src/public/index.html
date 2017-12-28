@@ -2,21 +2,22 @@
 <html>
   <head>
     <title>Who's there?</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
     <link href="/css/styles.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
   </head>
   <body>
     <h1>Who's in the office?</h1>
-
+    
+    <input type="text" id="nickname" placeholder="What's your name?">
     <ul id="users"></ul>
-
+    
     <!-- When Logged In -->
     <button id="logout" >Logout</button>
 
     <!-- When Logged Out -->
     <form id="login">
-      <input type="text" name="nickname" placeholder="Nickname">
       <input type="password" name="password" placeholder="Password">
       <input type="submit" value="Login">
     </form>

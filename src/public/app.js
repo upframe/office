@@ -1,7 +1,7 @@
 const bodyElement = document.querySelector('body')
 const loginElement = document.querySelector('#login')
 const passwordElement = document.querySelector('input[name="password"]')
-const nicknameElement = document.querySelector('input[name="nickname"]')
+const nicknameElement = document.querySelector('#nickname')
 const logoutElement = document.querySelector('#logout')
 const usersElement = document.querySelector('#users')
 
@@ -54,13 +54,7 @@ function wrongPassword () {
 // Sends login information
 function login (event) {
   event.preventDefault()
-
-  const data = [
-    nicknameElement.value,
-    passwordElement.value
-  ]
-
-  ws.send(JSON.stringify(data))
+  ws.send(passwordElement.value)
 }
 
 // Display the users from an array
@@ -80,7 +74,15 @@ function logout (event) {
   ws.send(status.logout)
 }
 
+function submitNick (event) {
+  if (event.keyCode === 13) {
+    ws.send(nicknameElement.value)
+    nicknameElement.value = ''
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   loginElement.addEventListener('submit', login)
   logoutElement.addEventListener('click', logout)
+  nicknameElement.addEventListener('keyup', submitNick)
 })
