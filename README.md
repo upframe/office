@@ -2,14 +2,22 @@
 
 This simple NodeJS Web App allows you to know who is in the office of your company. The members of the company can change their own state.
 
-## Usage
+## Installation (Dev-mode)
 
-There must be a ```thisisnotthepassword.txt``` file in the same place where the binary is being executed and it must contain the password that'll be used by the members to change their status.
+> - git clone -b nodejs_port --single-branch https://github.com/upframe/whosthere.git
 
-## NPM Packages
+> - cd whosthere
 
-The development of this port used the following extra packages:
+> - npm install
 
- - **Express** - HTTP Routing
- - **Body-parser** - Intuitive POST method capture
- - **EJS Template Engine** - Template renderer
+## Running
+
+> - cd src
+
+> Set environment variables - Depends on the operating system
+> WHOSTHERE_PORT = Port para correr o servidor
+> WHOSTHERE_PWD = Password para entrar na sala
+
+> - node index
+
+> The server will be up and running :D
