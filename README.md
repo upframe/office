@@ -10,7 +10,6 @@ This simple NodeJS Web App allows you to know who is in the office of your compa
 ```
 git clone https://github.com/upframe/whosthere.git
 cd whosthere
-git checkout nodejs_port
 npm install
 ```
 
