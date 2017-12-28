@@ -75,7 +75,7 @@ function logout (event) {
 }
 
 function submitNick (event) {
-  if (event.keyCode === 13) {
+  if (event.keyCode === 13 && nicknameElement.value.trim()) {
     ws.send(nicknameElement.value)
     nicknameElement.value = ''
   }
