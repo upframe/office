@@ -7,6 +7,7 @@ body {
   max-width: 27em;
   width: 90%;
   margin: 0 auto;
+  font-family: 'Roboto', sans-serif;
 }
 
 h1 {
@@ -41,7 +42,6 @@ input[type="submit"], button {
   border-radius: 3px;
   outline: none;
   cursor: pointer;
-  font-family: roboto;
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 1.4px;
