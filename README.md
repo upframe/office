@@ -18,7 +18,7 @@ npm install
 Important environment variables:
 
 + `WHOSTHERE_PORT` (default is `8080`)
-+ `WHOSTHERE_PWD` (default is `default_password`)
++ `WHOSTHERE_PWD` (default is `pwd`)
 
 ```
 npm run start
