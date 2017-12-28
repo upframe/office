@@ -4,20 +4,20 @@ This simple NodeJS Web App allows you to know who is in the office of your compa
 
 ## Installation (Dev-mode)
 
-> - git clone -b nodejs_port --single-branch https://github.com/upframe/whosthere.git
-
-> - cd whosthere
-
-> - npm install
+> git clone -b nodejs_port --single-branch https://github.com/upframe/whosthere.git
+>
+> cd whosthere
+>
+> npm install
 
 ## Running
 
 > - cd src
-
+>
 > Set environment variables - Depends on the operating system
 > WHOSTHERE_PORT = Port para correr o servidor
 > WHOSTHERE_PWD = Password para entrar na sala
-
+>
 > - node index
-
+>
 > The server will be up and running :D
