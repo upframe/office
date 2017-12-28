@@ -5,22 +5,22 @@
 
 This simple NodeJS Web App allows you to know who is in the office of your company. The members of the company can change their own state.
 
-## Installation (Dev-mode)
+## Installation
 
-> git clone -b nodejs_port --single-branch https://github.com/upframe/whosthere.git
->
-> cd whosthere
->
-> npm install
+```
+git clone https://github.com/upframe/whosthere.git
+cd whosthere
+git checkout nodejs_port
+npm install
+```
 
 ## Running
 
-> cd src
->
-> Set environment variables - Depends on the operating system
-> WHOSTHERE_PORT = Port para correr o servidor
-> WHOSTHERE_PWD = Password para entrar na sala
->
-> node index
->
-> The server will be up and running :D
++ `WHOSTHERE_PORT` (default is `8080`)
++ `WHOSTHERE_PWD` (default is `default_password`)
+
+```
+npm run start
+```
+
+The server will be up and running :D
