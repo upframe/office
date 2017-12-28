@@ -18,8 +18,8 @@ ws.addEventListener('open', (event) => {
   ws.send('ping')
 })
 
-//Everytime we get a message it can either be a logged in event, a logged out event,
-//a wrong password event or the users collection as a string
+// Everytime we get a message it can either be a logged in event, a logged out event,
+// a wrong password event or the users collection as a string
 ws.addEventListener('message', (event) => {
   switch (event.data) {
     case status.loggedIn:
@@ -38,12 +38,12 @@ ws.addEventListener('message', (event) => {
   }
 })
 
-//If the user closes the page we have to warn our server that a user has disconnected
+// If the user closes the page we have to warn our server that a user has disconnected
 window.onbeforeunload = (event) => {
   ws.close()
 }
 
-//Wrong password sent
+// Wrong password sent
 function wrongPassword () {
   passwordElement.classList.add('invalid')
   setTimeout(() => {
@@ -51,7 +51,7 @@ function wrongPassword () {
   }, 500)
 }
 
-//Sends login information
+// Sends login information
 function login (event) {
   event.preventDefault()
 
@@ -63,10 +63,10 @@ function login (event) {
   ws.send(JSON.stringify(data))
 }
 
-//Display the users from an array
+// Display the users from an array
 function display (users) {
   usersElement.innerHTML = ''
-  //For each user in the array we create a new li element to display it
+  // For each user in the array we create a new li element to display it
   users.forEach(function (text) {
     const li = document.createElement('li')
     li.appendChild(document.createTextNode(text))
@@ -74,7 +74,7 @@ function display (users) {
   })
 }
 
-//Send logout warning
+// Send logout warning
 function logout (event) {
   event.preventDefault()
   ws.send(status.logout)

@@ -23,15 +23,15 @@ const wss = new WebSocket.Server({
 
 app.use(express.static(path.join(__dirname, 'public')))
 
-//Connection to the socket event
+// Connection to the socket event
 wss.on('connection', function (ws) {
   ws.user = ''
 
   const send = () => {
     ws.send(JSON.stringify(users.toArray()))
   }
-  //Everytime we get a message it can either be a ping, a logout request or a
-  //login attempt
+   // Everytime we get a message it can either be a ping, a logout request or a
+   // login attempt
   ws.on('message', (message) => {
     if (message === 'ping') {
       return
@@ -42,24 +42,24 @@ wss.on('connection', function (ws) {
     login(ws, message)
   })
 
-  //When a connection closes we have to clean our user collection. We remove the
-  //user that disconnected.
+  // When a connection closes we have to clean our user collection. We remove the
+  // user that disconnected.
   ws.on('close', function close () {
     users.removeListener('change', send)
     users.remove(ws.user)
     ws.user = ''
   })
 
-  //Everytime our user collection changes we have to send updated information
+  // Everytime our user collection changes we have to send updated information
   // to everyone connected to the server.
   users.on('change', send)
   send()
 })
 
-//Login function
-//Input: Web Socket, Incoming message (JSON data as string)
-//Checks if a user sent the right credentials and returns
-//a successful connection status if he did and a wrongPassword status if he didn't
+// Login function
+// Input: Web Socket, Incoming message (JSON data as string)
+// Checks if a user sent the right credentials and returns
+// a successful connection status if he did and a wrongPassword status if he didn't
 function login (ws, message) {
   try {
     const data = JSON.parse(message)
@@ -79,9 +79,9 @@ function login (ws, message) {
   }
 }
 
-//Logout function
-//Input: Web socket
-//Removes the user from our user collection and sends a loggedOut event
+// Logout function
+// Input: Web socket
+// Removes the user from our user collection and sends a loggedOut event
 function logout (ws) {
   users.remove(ws.user)
   ws.user = ''
