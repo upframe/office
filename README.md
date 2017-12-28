@@ -12,12 +12,12 @@ This simple NodeJS Web App allows you to know who is in the office of your compa
 
 ## Running
 
-> - cd src
+> cd src
 >
 > Set environment variables - Depends on the operating system
 > WHOSTHERE_PORT = Port para correr o servidor
 > WHOSTHERE_PWD = Password para entrar na sala
 >
-> - node index
+> node index
 >
 > The server will be up and running :D
