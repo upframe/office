@@ -5,15 +5,13 @@
 
 This simple NodeJS Web App allows you to know who is in the office of your company. The members of the company can change their own state.
 
-## Installation
+## Install
 
 ```
 git clone https://github.com/upframe/whosthere.git
 cd whosthere
 npm install
 ```
-
-## Running
 
 Important environment variables:
 
@@ -25,3 +23,11 @@ npm run start
 ```
 
 The server will be up and running :D
+
+## Contribute
+
+PRs accepted.
+
+## License
+
+[MIT © Upframe](../LICENSE.md)
