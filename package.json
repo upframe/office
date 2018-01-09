@@ -1,26 +1,21 @@
 {
   "name": "whosthere",
-  "private": true,
   "version": "1.0.0",
+  "private": true,
   "description": "Virtual office with password access",
-  "main": "src/index.js",
   "dependencies": {
-    "body-parser": "1.18.2",
-    "express": "4.16.2",
-    "ws": "3.3.3"
-  },
-  "devDependencies": {
-    "pre-commit": "1.2.2",
-    "standard": "10.0.3"
+    "firebase": "^4.8.1",
+    "prop-types": "^15.6.0",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-scripts": "1.0.17"
   },
   "scripts": {
-    "start": "node src/index.js",
-    "test": "standard",
-    "lint": "standard"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
   },
-  "pre-commit": [
-    "lint"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/upframe/whosthere.git"
