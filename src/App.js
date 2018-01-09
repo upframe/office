@@ -7,6 +7,7 @@ import Login from './components/login'
 const password = process.env.REACT_APP_PASSWORD ||
   '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8' // sha256 for 'password'
 const database = firebase.database()
+const auth = firebase.auth()
 
 class App extends Component {
   state = {
@@ -29,6 +30,7 @@ class App extends Component {
   }
 
   onLogin = () => {
+    auth.signInAnonymously()
     this.setState({
       loggedIn: true,
       ref: database.ref().child('users').push()
@@ -38,6 +40,7 @@ class App extends Component {
   }
 
   onLogout = () => {
+    auth.signOut()
     this.state.ref.remove()
     this.setState({
       loggedIn: false,
