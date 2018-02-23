@@ -19,7 +19,7 @@ class App extends Component {
   componentDidMount () {
     const online = database.ref('users')
     online.on('value', (snapshot) => {
-      this.setState({ users: snapshot.val() })
+      this.setState({ users: snapshot.user.val() })
     })
   }
 
